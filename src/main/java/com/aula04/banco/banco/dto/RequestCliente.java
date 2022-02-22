@@ -9,6 +9,6 @@ import lombok.Setter;
 public class RequestCliente {
     private String nome;
     private String email;
-    private Integer conta;
+    private String senha;
     private Integer agencia;
 }

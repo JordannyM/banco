@@ -1,41 +1,43 @@
 package com.aula04.banco.banco.controller;
 
 import com.aula04.banco.banco.dto.RequestCliente;
+import com.aula04.banco.banco.dto.ResponseCliente;
 import com.aula04.banco.banco.model.BancoCliente;
 import com.aula04.banco.banco.model.Cliente;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import com.aula04.banco.banco.model.Conta;
+import com.aula04.banco.banco.model.TipoConta;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/cliente")
 public class ClienteController {
+    Random random = new Random();
+
     BancoCliente bancoCliente = new BancoCliente();
-    @GetMapping("/clientes")
-    public String clientes(Model model){
-
-        Cliente cliente = new Cliente("Nath", "nath@letscode.com", 123, 0);
-        Cliente cliente2 = new Cliente("Rapha", "tapha@letscode.com",1234, 1);
-
-        BancoCliente.adiciona(cliente);
-        BancoCliente.adiciona(cliente2);
-
-        model.addAttribute("clientes", BancoCliente.buscar());
-
-        return "clientes";
+    @GetMapping
+    public List<ResponseCliente> clientes(){
+        return ResponseCliente.toResponse(bancoCliente.buscar());
     }
 
-    @GetMapping("/cadastra/cliente")
-    public String formClientes(){ return "formCliente";}
+    @PostMapping
+    public ResponseCliente cadastraCliente(@RequestBody RequestCliente requestCliente){
+        List<Conta> contas= new ArrayList<>();
+        Conta conta = new Conta(UUID.randomUUID(),random.nextInt(), 23, TipoConta.CONTA_CORRENTE);
+        contas.add(conta);
 
-    @PostMapping("/cliente")
-    public String cadastraCliente(RequestCliente requestCliente){
-              Cliente cliente = new Cliente(
-                      requestCliente.getNome(),
-                      requestCliente.getEmail(),
-                      requestCliente.getConta(),
-                      requestCliente.getAgencia());
-              bancoCliente.adiciona(cliente);
-              return "clienteCadastrado";
+        Cliente cliente = new Cliente(
+                UUID.randomUUID(),
+                requestCliente.getNome(),
+                requestCliente.getEmail(),
+                requestCliente.getSenha(),
+                contas
+        );
+        bancoCliente.adiciona(cliente);
+        return new ResponseCliente(cliente);
     }
 }
