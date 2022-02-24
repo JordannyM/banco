@@ -1,6 +1,7 @@
 package com.aula04.banco.banco.controller;
 
 import com.aula04.banco.banco.dto.RequestCliente;
+import com.aula04.banco.banco.dto.RequestDeposito;
 import com.aula04.banco.banco.dto.ResponseCliente;
 import com.aula04.banco.banco.model.BancoCliente;
 import com.aula04.banco.banco.model.Cliente;
@@ -34,7 +35,7 @@ public class ClienteController {
             @RequestBody RequestCliente requestCliente,
             UriComponentsBuilder uriComponentsBuilder){
         List<Conta> contas= new ArrayList<>();
-        Conta conta = new Conta(UUID.randomUUID(),random.nextInt(), 23, TipoConta.CONTA_CORRENTE);
+        Conta conta = new Conta(UUID.randomUUID(),random.nextInt(), 23, TipoConta.CONTA_CORRENTE, 0);
         contas.add(conta);
 
         Cliente cliente = new Cliente(
@@ -64,11 +65,13 @@ public class ClienteController {
         return ResponseEntity.ok(new ResponseCliente(cliente));
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<ResponseCliente> deletaCliente(
-            @PathVariable UUID id) throws Exception {
+    public ResponseEntity deletaCliente(
+            @PathVariable UUID id) throws Exception{
 
-        Cliente cliente = bancoCliente.deletaCliente(id);
+        bancoCliente.deletaCliente(id);
 
-        return ResponseEntity.ok(new ResponseCliente(cliente));
+        return ResponseEntity.ok().build();
     }
+
+
 }

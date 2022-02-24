@@ -37,10 +37,9 @@ public class BancoCliente {
             return detalhesCliente(id);
         }
 
-        public Cliente deletaCliente(UUID id) throws Exception{
-            clientes.remove(BancoCliente.clientes.stream().filter(cliente ->
-                    Objects.equals(cliente.getId(),id)));
-
-            return detalhesCliente(id);
+        public void deletaCliente(UUID id) throws Exception{
+            Cliente cliente = detalhesCliente(id);
+            BancoCliente.clientes.remove(cliente);
         }
+
 }

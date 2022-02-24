@@ -13,4 +13,5 @@ public class Conta {
     private Integer conta;
     private Integer agencia;
     private Enum tipoConta;
+    private double saldo;
 }
